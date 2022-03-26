@@ -30,9 +30,7 @@ for (int i = 0; i < k; i++) {
 
 如果所有断言都通过，那么您的题解将被`通过`。
 
-来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array
-著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 
 #### 代码
 ```Python
@@ -66,7 +64,7 @@ class Solution:
 
  
 
-说明:
+#### 说明:
 
 为什么返回数值是整数，但输出的答案是数组呢?
 
@@ -85,17 +83,15 @@ for (int i = 0; i < len; i++) {
 }
 ```
 
-来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/remove-element
-著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
-示例 1：
 
-输入：nums = [3,2,2,3], val = 3
+#### 示例 1：
+<br> 输入：nums = [3,2,2,3], val = 3
 <br> 输出：2, nums = [2,2]
 <br> 解释：函数应该返回新的长度`2`, 并且`nums`中的前两个元素均为`2`。你不需要考虑数组中超出新长度后面的元素。
 <br> 例如，函数返回的新长度为`2`，而`nums = [2,2,3,3]`或`nums = [2,2,0,0]`，也会被视作正确答案。
 
-示例 2：
+#### 示例 2：
 <br> 输入：nums = [0,1,2,2,3,0,4,2], val = 2
 <br> 输出：5, nums = [0,1,4,0,3]
 <br> 解释：函数应该返回新的长度`5`, 并且`nums`中的前五个元素为 0, 1, 3, 0, 4。注意这五个元素可为任意顺序。你不需要考虑数组中超出新长度后面的元素。
@@ -112,6 +108,7 @@ class Solution:
             nums.remove('a')        #移除换掉的字符, .remove是删除指定值, .pop删除指定索引
         return len(nums)            #需要return结果，即新数组长度，否则会有stdout
 ```
+
 想法就是替换掉列表中的所有`val`,然后挨个删除。
 
 ### 解法二，双指针
@@ -135,11 +132,11 @@ class Solution:
 
 注意：答案中不可以包含重复的三元组。
 
-示例 1：
+#### 示例 1： 
 <br> 输入：nums = [-1,0,1,2,-1,-4]
 <br> 输出：[[-1,-1,2],[-1,0,1]]
 
-示例 2：
+#### 示例 2：
 <br> 输入：nums = []
 <br> 输出：[]
 <br> 示例 3：
@@ -147,9 +144,7 @@ class Solution:
 <br> 输入：nums = [0]
 <br> 输出：[]
 
-来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/3sum
-著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 
 ### 解题思路：排序 + 双指针
 暴力法搜索为O(N<sup>3</sup>)时间复杂度，可通过双指针动态消去无效解来优化效率。
@@ -188,7 +183,6 @@ class Solution:
                         while j < k and nums[j] == nums[j-1]: j += 1
                         while j < k and nums[k] == nums[k+1]: k -= 1
         return res
-
 ```
 
 有人问马老师发生甚么事了，怎➡️么➡️说⬇️呢⬇️，犹豫不决先排序，步步逼近双指针。
@@ -199,5 +193,3 @@ class Solution:
 
 作者：jyd
 链接：https://leetcode-cn.com/problems/3sum/solution/3sumpai-xu-shuang-zhi-zhen-yi-dong-by-jyd/
-来源：力扣（LeetCode）
-
