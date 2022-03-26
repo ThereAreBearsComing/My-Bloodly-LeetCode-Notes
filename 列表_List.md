@@ -34,7 +34,7 @@ for (int i = 0; i < k; i++) {
 链接：https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 
-###代码
+### 代码
 ```Python
 class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
@@ -151,6 +151,16 @@ class Solution:
 链接：https://leetcode-cn.com/problems/3sum
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 
+#### 解题思路：
+暴力法搜索为O(N<sup>3</sup>)时间复杂度，可通过双指针动态消去无效解来优化效率。
+* 双指针法铺垫： 先将给定 nums 排序，复杂度为 O(NlogN)O(NlogN)。
+* 双指针法思路： 固定`3`个指针中最左（最小）数字的指针`i`，双指针`j，k`分设在数组索引`(i, len(nums))(i,len(nums))`两端，通过双指针交替向中间移动，记录对于每个固定指针`i`的所有满足`nums[i] + nums[j] + nums[k] == 0`的`j,k`组合：
+当`nums[k] > 0`时直接break跳出：因为`nums[j] >= nums[i] >= nums[k] > 0`，即`3`个数字都大于`0`，在此固定指针`i`之后不可能再找到结果了。
+当`k`> 0且`nums[k] == nums[k - 1]`时即跳过此元素nums[k]：因为已经将`nums[k - 1]`的所有组合加入到结果中，本次双指针搜索只会得到重复组合。
+`j，k`分设在数组索引`(i, len(nums))(i,len(nums))`两端，当`j < k`循环计算`s = nums[i] + nums[j] + nums[k]`，并按照以下规则执行双指针移动：
+当`s < 0`时，`j += 1`并跳过所有重复的`nums[j]`；
+当`s > 0`时，`k -= 1`并跳过所有重复的`nums[k]`；
+当`s == 0`时，记录组合[i, j, k]至`res`，执行`j += 1`和`k -= 1`并跳过所有重复的`nums[j]`和`nums[k]`，防止记录到重复组合。
 
 ### 排序 + 双指针
 
@@ -181,4 +191,13 @@ class Solution:
 
 ```
 
-有人问马老师发生什么事了，怎么说呢，犹豫不决先排序，步步逼近双指针。
+有人问马老师发生甚么事了，怎➡️么➡️说⬇️呢⬇️，犹豫不决先排序，步步逼近双指针。
+
+#### 复杂度分析：
+<br>时间复杂度O(N<sup>2</sup>)：其中固定指针k循环复杂度O(N)，双指针`j,k`复杂度O(N)。
+<br>空间复杂度O(1)：指针使用常数大小的额外空间。
+
+作者：jyd
+链接：https://leetcode-cn.com/problems/3sum/solution/3sumpai-xu-shuang-zhi-zhen-yi-dong-by-jyd/
+来源：力扣（LeetCode）
+
