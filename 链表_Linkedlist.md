@@ -56,3 +56,60 @@ class Solution: #merge v.合并,
 #### 空间复杂度：*O(m+n)*
 对于递归调用`self.mergeTwoLists()`当它遇到终止条件准备回溯时，已经递归调用了*O(m+n)* 次，使用了*O(m+n)* 个栈帧，故最后的空间复杂度为*O(m+n)*。
 
+## 160.相交链表
+给你两个单链表的头节点`headA`和`headB`，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回`null`。
+
+<br>图示两个链表在节点 c1 开始相交：
+
+<img width="426" alt="截屏2022-03-29 上午10 24 48" src="https://user-images.githubusercontent.com/74708198/160520189-77a0bb3d-9ac8-4db6-b26b-dc143443c89f.png">
+
+<br>题目数据 **保证** 整个链式结构中不存在环。
+<br>注意，函数返回结果后，链表必须 **保持其原始结构**。
+
+#### 自定义评测：
+**评测系统**的输入如下（你设计的程序**不适用**此输入）：
+`intersectVal`- 相交的起始节点的值。如果不存在相交节点，这一值为`0`
+`listA`- 第一个链表
+`listB`- 第二个链表
+`skipA`- 在`listA`中（从头节点开始）跳到交叉节点的节点数
+`skipB`- 在`listB`中（从头节点开始）跳到交叉节点的节点数
+评测系统将根据这些输入创建链式数据结构，并将两个头节点`headA`和`headB`传递给你的程序。如果程序能够正确返回相交节点，那么你的解决方案将被**视作正确答案**。
+<br>链接：https://leetcode-cn.com/problems/intersection-of-two-linked-lists
+
+### 你走过我来时的路(双指针)
+pA走过的路径为A链+B链
+<br>pB走过的路径为B链+A链
+<br>pA和pB走过的长度都相同，都是A链和B链的长度之和，相当于将两条链从尾端对齐，如果相交，则会提前在相交点相遇，如果没有相交点，则会在最后相遇。(PA+C+PB+C = PB+C+PA+C)
+
+```Python
+pA:1->2->3->4->5->6->null->9->5->6->null
+pB:9->5->6->null->1->2->3->4->5->6->null
+```
+
+```Python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> ListNode:
+        if headA == [] or headB == []:  #只要有一个空则为null
+            return null   
+        tmpA = headA    
+        tmpB = headB  
+        while tmpA != tmpB:  #当两指针指相同时，停止
+            if tmpA:         #让A指针向后遍历，直到末尾换去到B链表
+                tmpA = tmpA.next
+            else:
+                tmpA = headB
+            if tmpB:         #让B指针向后遍历，直到末尾换去到A链表
+                tmpB = tmpB.next
+            else:
+                tmpB = headA
+        return tmpB          #returnA turnB 都可以
+```
+
+
+
+
