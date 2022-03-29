@@ -2,6 +2,13 @@
 You Only Look Lots of Times
 
 # 链表 Linkedlist
+<img width="606" alt="2" src="https://user-images.githubusercontent.com/74708198/160557455-04a4d98e-eb23-4e47-b405-7150b2f7178a.png">
+
+#### 指针负值操作
+```Python
+p = p.next
+```
+实际上`p`为指向当先节点的指针，`p.next`则为`p`的下一个指针，即当前节点指向下一个节点的指针，所以都为指针！
 
 ## 21.合并两个有序链表
 
@@ -109,6 +116,116 @@ class Solution:
                 tmpB = headA
         return tmpB          #returnA turnB 都可以
 ```
+
+## 82.删除排序链表中的重复元素 II
+给定一个已排序的链表的头`head`，删除原始链表中所有重复数字的节点，只留下不同的数字。返回 *已排序的链表*。
+
+#### 示例 1：
+输入：head = [1,2,3,3,4,4,5]
+<br>输出：[1,2,5]
+
+#### 示例 2：
+<img width="407" alt="1" src="https://user-images.githubusercontent.com/74708198/160522523-db6c29ee-0156-440a-be07-356be611cd3f.png">
+输入：head = [1,1,1,2,3]
+<br>输出：[2,3]
+
+链接：https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii
+
+**链表和树的问题，一般都可以有递归和迭代两种写法。**
+
+### 方法一：一次遍历
+这里说的一次遍历，是说一边遍历、**一边统计相邻节点的值是否相等，如果值相等就继续后移找到值不等的位置，然后删除值相等的这个区间。**
+<br>其实思路很简单，跟递归方法中的`while`语句跳过所有值相等的节点的思路是一样的：如果`cur.val == cur.next.val` 说明两个相邻的节点值相等，所以继续后移，一直找到`cur.val != cur.next.val`，此时的`cur.next` 就是值不等的节点。
+
+比如：`1 -> 2 -> 2 -> 2 -> 3，`我们用一个`pre`指向 1；当`cur`指向第一个`2`的时候，发现`cur.val == cur.next.val`，所以出现了值重复的节点啊，所以`cur`一直后移到最后一个`2`的时候，发现`cur.val != cur.next.val`，此时`cur.next = 3`，所以`pre.next = cur.next`，即让`1`的`next`节点是`3`就把中间的所有`2`都删除了。
+代码中用到了一个常用的技**dummy节点，也叫做哑节点**。它在链表的迭代写法中非常常见，因为对于本题而言，我们可能会删除头结点`head`为了维护一个不变的头节点，所以我们添加了`dummy`让`dummy.next = head`这样即使`head`被删了，那么会操作`dummy.next`指向新的链表头部，所以最终返回的也是`dummy.next`。
+
+```Python
+class Solution(object):
+    def deleteDuplicates(self, head):
+        if not head or not head.next:
+            return head
+        dummy = ListNode(0)
+        dummy.next = head
+        pre = dummy
+        cur = head
+        while cur:
+            # 跳过当前的重复节点，使得cur指向当前重复元素的最后一个位置
+            while cur.next and cur.val == cur.next.val:
+                cur = cur.next
+            if pre.next == cur:
+                 # pre和cur之间没有重复节点，pre后移
+                pre = pre.next
+            else:
+                # pre->next指向cur的下一个位置（相当于跳过了当前的重复元素）
+                # 但是pre不移动，仍然指向已经遍历的链表结尾
+                pre.next = cur.next
+            cur = cur.next
+        return dummy.next
+```
+* 时间复杂度：***O(N)***，对链表每个节点遍历了一次；
+* 空间复杂度：***O(1)***，只使用了常量的空间。
+
+### 方法二：利用计数，两次遍历
+这个做法忽略了链表有序这个性质，使用了两次遍历，第一次遍历统计每个节点的值出现的次数，第二次遍历的时候，如果发现`head.next`的`val`出现次数不是`1`次，则需要删除`head.next`。
+
+```Python
+class Solution:
+    def deleteDuplicates(self, head):
+        dummy = ListNode(0)
+        dummy.next = head
+        val_list = []
+        while head:
+            val_list.append(head.val)
+            head = head.next
+        counter = collections.Counter(val_list)
+        head = dummy
+        while head and head.next:
+            if counter[head.next.val] != 1:
+                head.next = head.next.next
+            else:
+                head = head.next
+        return dummy.next
+```
+* 时间复杂度：***O(N)***，对链表遍历了两次；
+* 空间复杂度：***O(N)***，需要一个字典保存每个节点值出现的次数。
+
+### 方法三：递归
+#### 1.1 递归函数定义
+**递归最基本的是要明白递归函数的定义！** 我反复强调过这一点。
+<br>递归函数直接使用题目给出的函数`deleteDuplicates(head)`，它的含义是 删除`head`作为开头的有序链表中，值出现重复的节点。
+
+#### 1.2 递归终止条件
+终止条件就是能想到的基本的、不用继续递归处理的case。
+<br>如果`head`为空，那么肯定没有值出现重复的节点，直接返回`head`；
+<br>如果`head.next`为空，那么说明链表中只有一个节点，也没有值出现重复的节点，也直接返回`head`。
+#### 1.3 递归调用
+什么时候需要递归呢？我们想一下这两种情况：
+<br>如果`head.val != head.next.val`，说明头节点的值不等于下一个节点的值，所以当前的`head`节点必须保留；但是`head.next`节点要不要保留呢？我们还不知道，需要对`head.next`进行递归，即对`head.next`作为头节点的链表，去除值重复的节点。所以`head.next = self.deleteDuplicates(head.next)`.
+<br>如果`head.val == head.next.val`，说明头节点的值等于下一个节点的值，所以当前的 head 节点必须删除，并且`head`之后所有与`head.val`相等的节点也都需要删除；删除到哪个节点为止呢？需要用`move`指针一直向后遍历寻找到与`head.val`不等的节点。此时`move`之前的节点都不保留了，因此返回`deleteDuplicates(move)`;
+#### 1.4 返回结果
+题目让我们返回删除了值重复的节点后剩余的链表，结合上面两种递归调用的情况。
+<br>如果`head.val != head.next.val`，头结点需要保留，因此返回的是`head`；
+<br>如果`head.val == head.next.val`，头结点需要删除，需要返回的是`deleteDuplicates(move)`;。
+
+<br>作者：fuxuemingzhu
+<br>链接：https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/solution/fu-xue-ming-zhu-di-gui-die-dai-yi-pian-t-wy0h/
+```Python
+class Solution(object):
+    def deleteDuplicates(self, head):
+        if not head or not head.next:
+            return head
+        if head.val != head.next.val:  #头指针指向的值等于，头指针下一个指针指向的值。
+            head.next = self.deleteDuplicates(head.next) # xx.next = ww意思应该是把xx作为ww的头节点，xx指针指向ww
+        else:
+            move = head.next # mm = xx.next 意思是mm作为指向头节点的指针换到头节点指向下一个节点的指针，也就是吧原始的头节点砍掉了。
+            while move and head.val == move.val: #这里move理解为遍历指针？(暂时不怎么理解)
+                move = move.next
+            return self.deleteDuplicates(move)
+        return head
+```
+**时间复杂度**：***O(N)***，每个节点访问了一次。
+<br>**空间复杂度**：***O(N)***，递归调用的时候会用到了系统的栈。
 
 
 
