@@ -120,7 +120,125 @@ def dfs(self,root: Optional[TreeNode]):
                 q.append(root.right)
     return
 ```
+## 104.双二叉树最大深度
 
+给定一个二叉树，找出其最大深度。
+<br> 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+<br> **说明:** 叶子节点是指没有子节点的节点。
+
+#### 示例：
+给定二叉树 [3,9,20,null,null,15,7]，
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+返回它的最大深度`3`。
+
+链接：https://leetcode-cn.com/problems/maximum-depth-of-binary-tree
+
+### 深度优先DSF
+#### 前序遍历
+```Python
+class Solution:
+    def dfs(self, root: Optional[TreeNode], temp: int, ans: int):
+        if not root:   #如果root节点不是空,证明树有东西，不是空树
+            self.ans = max(self.ans, temp) #如果temp更大，更新ans
+            return #什么值也不返回，就只是让if条件在此终结 = return None
+        temp += 1 
+        self.dfs(root.left, temp, self.ans)   #左节点探索，有左节点则可以一直更新temp
+        self.dfs(root.right, temp, self.ans)  #右节点探索，有右节点则可以一直更新temp
+        return 
+
+    def maxDepth(self, root: TreeNode) -> int:
+        self.ans = 0
+        temp = 0   #定义一个temp来储存深度
+        self.dfs(root, temp, self.ans)
+        return self.ans 
+```
+#### 后序遍历
+```Python
+class Solution:
+    def dfs(self, root: Optional[TreeNode]):
+        if not root:  
+            return 0
+        left  = self.dfs(root.left)  #左子树高度
+        right = self.dfs(root.right) #右子树高度
+        ans   = max(left, right) + 1 #加一个根节点
+        return ans
+
+    def maxDepth(self, root: TreeNode) -> int:
+        ans = self.dfs(root)
+        return ans
+```
+
+### 广度优先BSF
+```Python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root: return 0
+        q = [] #队列
+        q.append(root) #队列初始化
+        arr = 0
+        while q:    #while内，for循环外负责控制层级别的操作
+            size = len(q)         #记录当前层中的节点总数
+            for i in range(size): #for循环内部负责控制同一层内节点级别操作
+                node = q.pop(0)   #定义指针，从root节点开始
+                if node.left:
+                  q.append(node.left)
+                if node.right:
+                  q.append(node.right)
+            arr += 1              #每次迭代完，记录层数
+        return arr
+```
+
+## 111. 二叉树的最小深度
+
+给定一个二叉树，找出其最小深度。
+<br>最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+<br>**说明**：叶子节点是指没有子节点的节点。
+
+#### 示例 1：
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+输入：root = [3,9,20,null,null,15,7]
+<br>输出：2
+
+#### 示例 2：
+输入：root = [2,null,3,null,4,null,5,null,6]
+<br>输出：5
+
+链接：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree
+
+```Python
+class Solution:
+    def minDepth(self, root: TreeNode) -> int:
+        if not root:  
+            return 0
+        if not root.left and not root.right:
+            return 1
+        
+        min_depth = 10**5
+        if root.left:
+            min_depth = min(self.minDepth(root.left), min_depth) #在这里更新完,min_depth就已经是左子树的深度了
+        if root.right:
+            min_depth = min(self.minDepth(root.right), min_depth) #除非又子树更浅，不然不更新
+        
+        return min_depth + 1
+```
 
 ## 938. 二叉搜索树的范围和 | Range Sum of BST 
 
