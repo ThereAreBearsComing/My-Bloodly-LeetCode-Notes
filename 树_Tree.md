@@ -51,7 +51,7 @@ You Only Look Lots of Times
 * “进入”：程序来到了某个节点，并未对该节点产生任何交互。
 * 不同规则下对用一节点的“进入”可能会发生多次，但是“访问”只会有一次。
 
-#### 深度优先搜索DFS
+### 深度优先搜索DFS
 二叉树的深度优先搜索，在“进入”节点时有一下约定俗成的要求：
 * 必须以根节点为起点并“进入”
 * 优先“进入”当前节点的左子节点，其次是“进入“当前节点的右子节点。
@@ -85,7 +85,7 @@ def dfs(TreeNode root):
 
 <br> <img width="1031" alt="888" src="https://user-images.githubusercontent.com/74708198/160958742-1ad68c02-b6b9-49d0-963d-ff7629bf9e00.png">
 
-#### 广度优先搜索BFS
+### 广度优先搜索BFS
 
 <br> <img width="1005" alt="8" src="https://user-images.githubusercontent.com/74708198/160959197-18581c10-50d9-4909-86b2-8f4df9ebda0e.png">
 
