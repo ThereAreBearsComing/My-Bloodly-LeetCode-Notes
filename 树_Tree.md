@@ -223,6 +223,12 @@ class Solution:
 
 链接：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree
 
+### 方法一：深度优先搜索
+#### 思路及解法
+
+首先可以想到使用深度优先搜索的方法，遍历整棵树，记录最小深度。
+<br> 对于每一个非叶子节点，我们只需要分别计算其左右子树的最小叶子节点深度。这样就将一个大问题转化为了小问题，可以递归地解决该问题。
+
 ```Python
 class Solution:
     def minDepth(self, root: TreeNode) -> int:
@@ -239,6 +245,32 @@ class Solution:
         
         return min_depth + 1
 ```
+#### 复杂度分析
+* **时间复杂度**：***O(N)***，其中 ***N*** 是树的节点数。对每个节点访问一次。
+* **空间复杂度**：***O(H)***，其中 ***H*** 是树的高度。空间复杂度主要取决于递归时栈空间的开销，最坏情况下，树呈现链状，空间复杂度为 ***O(N)***。平均情况下树的高度与节点数的对数正相关，空间复杂度为 ***O(logN)***。
+
+### 方法二：宽度优先搜索
+#### 思路及解法
+同样，我们可以想到使用广度优先搜索的方法，遍历整棵树。
+<br> 当我们找到一个叶子节点时，直接返回这个叶子节点的深度。广度优先搜索的性质保证了最先搜索到的叶子节点的深度一定最小。
+
+```Python
+class Solution:
+    def minDepth(self, root: TreeNode) -> int:
+        if not root:
+            return 0
+        que = collections.deque([(root, 1)]) #collection函数用于制造队列
+        while que:
+            node, depth = que.popleft()      #que.popleft(),删除collection最左边的
+            if not node.left and not node.right:
+                return depth
+            if node.left:
+                que.append((node.left, depth + 1))
+            if node.right:
+                que.append((node.right, depth + 1))    
+        return 0
+```
+
 
 ## 938. 二叉搜索树的范围和 | Range Sum of BST 
 
