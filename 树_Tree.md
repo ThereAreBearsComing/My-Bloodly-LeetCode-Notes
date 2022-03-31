@@ -45,6 +45,83 @@ You Only Look Lots of Times
 * 平衡二叉树(AVL)：如果二叉树每个节点的左右子树高度差不大于`1`，则这棵二叉树就是平衡二叉树。
 <br>*平衡二叉树的经典应用场景就是与二叉树搜索树相结合，形成平衡二叉搜索树。在构建二叉搜索树的同时，借助调整策略，使每个节点左右子树高度差都不大于`1`，保证二叉搜索树中的每个节点的左右子树都规模相当，让整个树看起来更加“匀称”。*
 
+#### 树的核心操作为查找/搜索/遍历：
+* 遍历：按照某种规则“访问”树中的每个节点，保证每个节点都会被“访问”到且每个节点只会被”访问“一次。
+* “访问”：程序与节点产生交互或在节点进行某种操作。
+* “进入”：程序来到了某个节点，并未对该节点产生任何交互。
+* 不同规则下对用一节点的“进入”可能会发生多次，但是“访问”只会有一次。
+
+#### 深度优先搜索DFS
+二叉树的深度优先搜索，在“进入”节点时有一下约定俗成的要求：
+* 必须以根节点为起点并“进入”
+* 优先“进入”当前节点的左子节点，其次是“进入“当前节点的右子节点。
+* 如果当前节点为空，或者左右节点都被“进入”过，则返回并在此“进入”父节点。
+<br> <img width="1018" alt="23" src="https://user-images.githubusercontent.com/74708198/160955845-2c47f1a9-86af-44bd-941c-b85b65e32df6.png">
+
+#### 对应代码
+
+```Python
+def dfs(TreeNode root):
+    if not root: return #当前节点为空返回父节点
+    #第一次进入当前节点
+    dfs(root.left)      #优先进入左子节点
+    #第二次进入当前节点
+    dfs(root.right)     #其次进入右子节点
+    #第三次进入当前节点
+    return              #左右子节点全部进入过，返回父节点
+```
+
+<br> <img width="1031" alt="213" src="https://user-images.githubusercontent.com/74708198/160957844-3c174247-330a-4c78-ac1e-052f0f634e7f.png">
+
+##### 前/先序遍历
+
+<br> <img width="1044" alt="333" src="https://user-images.githubusercontent.com/74708198/160958157-a8f06f80-d205-4d70-a680-ea09d8f361c5.png">
+
+##### 中先序遍历
+
+<br> <img width="1037" alt="666" src="https://user-images.githubusercontent.com/74708198/160958629-bae01cb9-2c2e-47b0-a49b-ad632d4dab7c.png">
+
+##### 后先序遍历
+
+<br> <img width="1031" alt="888" src="https://user-images.githubusercontent.com/74708198/160958742-1ad68c02-b6b9-49d0-963d-ff7629bf9e00.png">
+
+#### 广度优先搜索BFS
+
+<br> <img width="1005" alt="8" src="https://user-images.githubusercontent.com/74708198/160959197-18581c10-50d9-4909-86b2-8f4df9ebda0e.png">
+
+#### 对应代码
+
+```Python
+def dfs(self,root: Optional[TreeNode]):
+    q = [] #队列
+    q.append(root) #队列初始化
+    while len(q) and q[0]:
+        cur = q.pop(0)
+        print(cur.val) #访问
+        if root.left:
+            q.append(root.left)
+        if root.right:
+            q.append(root.right)
+    return
+```
+
+```Python
+def dfs(self,root: Optional[TreeNode]):
+    q = [] #队列
+    q.append(root) #队列初始化
+    while len(q) and q[0]:    #while内，for循环外负责控制层级别的操作
+        size = len(q)         #记录当前层中的节点总数
+        for i in range(size): #for循环内部负责控制同一层内节点级别操作
+            cur = q.pop(0)
+            print(cur.val)    #访问
+            if root.left:
+                q.append(root.left)
+            if root.right:
+                q.append(root.right)
+    return
+```
+
+
 ## 938. 二叉搜索树的范围和 | Range Sum of BST 
 
 给定二叉搜索树的根结点`root`，返回值位于范围`[low, high]`之间的所有结点的值的和。
@@ -109,8 +186,8 @@ class Solution:
         return self.cur
 ```
 #### 复杂度分析
-* 时间复杂度：*O(n)*
-* 空间复杂度：*O(n)*
+* 时间复杂度：***O(n)***
+* 空间复杂度：***O(n)***
 
 #### 迭代
 迭代其实就是使用「栈」来模拟递归过程，也属于树的遍历中的常见实现形式。
